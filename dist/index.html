@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+
+  <script type="module" crossorigin src="/assets/index-BWxoA-vg.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-C2P_A7T-.css">
+  
+</head>
+<body>
+<div class="widget">
+
+    <div id="inicio">
+      <div id="hr1"></div>
+      <div id="box1">
+        <h1 class="text" id="text1">Calcula con confianza</h1>
+        <h3 class="text" id="text2">estima tus pagos mensuales y costes totales</h3>
+      </div>
+    </div>
+
+    <div id="inputTabla">
+      <h1 id="inputText">Calculadora de Hipotecas</h1>
+      <div id="hr2"></div>
+
+      <label class="ColorLabel" for="numb1">Precio de la Propiedad</label>
+      <div class="input">
+        <input class="numb" id="numb1" type="number" value="200000" min="1000" max="2000000" step="1000">
+        <div class="valor">€</div>
+      </div>
+
+      <label class="ColorLabel" for="numb2">Ahorros Aportados (Entrada)</label>
+      <div class="input">
+        <input class="numb" id="numb2" type="number" value="40000" step="100" max="2000000" min="0">
+        <div class="valor">€</div>
+      </div>
+
+      <label class="ColorLabel" for="numb3">Plazo en Años</label>
+      <div class="input">
+        <input class="numb" id="numb3" type="number" value="25" step="1" max="40" min="1">
+        <div class="valor">años</div>
+      </div>
+
+      <label class="ColorLabel" for="interestRate">Tasa de interés anual</label>
+      <div class="input">
+        <input class="numb" id="interestRate" type="number" value="3.50" step="0.01" min="0">
+        <div class="valor">%</div>
+      </div>
+
+   <label class="ColorLabel" for="TipHipoteca">Tipo de hipoteca</label>
+<div class="input">
+  <select id="TipHipoteca" disabled>
+    <option value="fija" selected>Fijo</option>
+  </select>
+  <input type="hidden" id="TipHipoteca" name="TipHipoteca" value="fija">
+</div>
+
+      <label class="ColorLabel" for="taxes">Impuestos y gastos estimados</label>
+      <div class="input">
+        <input class="numb" id="taxes" type="number" value="15000" step="100" min="0">
+        <div class="valor">€</div>
+      </div>
+
+    <label class="ColorLabel" for="region">Ubicación / Región</label>
+<div class="input">
+  <select id="region" name="region">
+    <option value="general">General</option>
+    <option value="andalucia">Andalucía</option>
+    <option value="aragon">Aragón</option>
+    <option value="asturias">Asturias</option>
+    <option value="baleares">Islas Baleares</option>
+    <option value="canarias">Canarias</option>
+    <option value="cantabria">Cantabria</option>
+    <option value="castilla-la-mancha">Castilla-La Mancha</option>
+    <option value="castilla-y-leon">Castilla y León</option>
+    <option value="cataluna">Cataluña</option>
+    <option value="comunidad-valenciana">Comunidad Valenciana</option>
+    <option value="extremadura">Extremadura</option>
+    <option value="galicia">Galicia</option>
+    <option value="la-rioja">La Rioja</option>
+    <option value="madrid">Comunidad de Madrid</option>
+    <option value="murcia">Región de Murcia</option>
+    <option value="navarra">Navarra</option>
+    <option value="pais-vasco">País Vasco</option>
+    <option value="ceuta">Ceuta</option>
+    <option value="melilla">Melilla</option>
+  </select>
+      </div>
+
+      <div style="margin-top:10px;">
+        <button class="calc-btn" id="calcBtn">Calcular</button>
+        
+      </div>
+    </div>
+
+    <div id="resultadoCalculado">
+      <h2>Resultados</h2>
+      <div id="resultsContent">
+        <p><strong>Cuota mensual:</strong> <span class="NumbResult" id="resMonthly">-</span></p>
+        <p><strong>Importe de Hipoteca (capital financiado):</strong> <span class="NumbResult" id="resFinanced">-</span></p>
+        <p><strong>Porcentaje financiado:</strong> <span class="NumbResult" id="resPercent">-</span></p>
+        <p><strong>Intereses totales:</strong> <span class="NumbResult" id="resInterest">-</span></p>
+        <p><strong>Coste total de la propiedad (precio + impuestos):</strong> <span class="NumbResult" id="resPropertyCost">-</span></p>
+        <p><strong>Coste total de la operación (capital + intereses + impuestos):</strong> <span class="NumbResult" id="resTotalOperation">-</span></p>
+      </div>
+      <canvas id="miGrafico"></canvas>
+    </div>
+
+  </div>
+
+</body>
+</html>
