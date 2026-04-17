@@ -33,28 +33,63 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   
-  const regionTaxesFactor = {
-    'general': 1.0,
-    'andalucia': 1.0,
-    'aragon': 1.0,
-    'asturias': 1.0,
-    'baleares': 1.05,
-    'canarias': 0.95,
-    'cantabria': 1.0,
-    'castilla-la-mancha': 1.0,
-    'castilla-y-leon': 1.0,
-    'cataluna': 1.02,
-    'comunidad-valenciana': 1.01,
-    'extremadura': 1.0,
-    'galicia': 1.0,
-    'la-rioja': 1.0,
-    'madrid': 1.03,
-    'murcia': 1.0,
-    'navarra': 1.0,
-    'pais-vasco': 1.02,
-    'ceuta': 0.9,
-    'melilla': 0.9
-  };
+function getITP(region, price) {
+  switch(region) {
+    case 'andalucia':
+      return 0.07; 
+    case 'aragon':
+      if (price <= 400000) return 0.08;
+      if (price <= 450000) return 0.085;
+      if (price <= 500000) return 0.09;
+      if (price <= 750000) return 0.095;
+      return 0.10;
+    case 'asturias':
+      if (price <= 300000) return 0.08;
+      if (price <= 500000) return 0.09;
+      return 0.10;
+    case 'baleares':
+      if (price <= 400000) return 0.08;
+      if (price <= 600000) return 0.09;
+      if (price <= 1000000) return 0.10;
+      if (price <= 2000000) return 0.12;
+      return 0.13;
+    case 'canarias':
+      return 0.065;
+    case 'cantabria':
+      return 0.09;
+    case 'castilla-la-mancha':
+      return 0.09;
+    case 'castilla-y-leon':
+      return price > 250000 ? 0.10 : 0.08;
+    case 'cataluna':
+      return price > 1000000 ? 0.11 : 0.10;
+    case 'ceuta':
+      return 0.06;
+    case 'madrid':
+      return 0.06;
+    case 'comunidad-valenciana':
+      return price > 1000000 ? 0.11 : 0.10;
+    case 'extremadura':
+      if (price <= 360000) return 0.08;
+      if (price <= 600000) return 0.10;
+      return 0.11;
+    case 'galicia':
+      return 0.08;
+    case 'la-rioja':
+      return 0.07;
+    case 'melilla':
+      return 0.06;
+    case 'murcia':
+      return 0.0775;
+    case 'navarra':
+      return 0.06;
+    case 'pais-vasco':
+      return 0.04;
+    default:
+      return 0.08; 
+  }
+}
+
 
   
   function drawChart(principal, interest, equity) {
