@@ -132,14 +132,14 @@ function getITP(region, price) {
 
   
     const TipHipoteca = TipHipotecaHidden ? TipHipotecaHidden.value : 'fija';
-
-  
     const region = regionEl ? regionEl.value : 'general';
-    const factor = regionTaxesFactor[region] || 1.0;
-    const taxesAdjusted = taxesInput * factor;
 
-  
-    const financed = Math.max(0, price - savings);
+    const itpRate = getITP(region, price);
+    const taxesAdjusted = taxesInput + (price * itpRate);
+
+    const costProperty = price + taxesAdjusted;
+    const financed = Math.max(0, costProperty - savings);
+
     const financedPct = price > 0 ? (financed / price) * 100 : 0;
 
   
@@ -154,9 +154,7 @@ function getITP(region, price) {
 
     const totalPayment = monthlyPayment * n;
     const totalInterest = Math.max(0, totalPayment - financed);
-
-    const costProperty = price + taxesAdjusted;
-    const costOperation = financed + totalInterest + taxesAdjusted;
+    const costOperation = costProperty + totalInterest;
 
   
     if (resMonthly) resMonthly.textContent = fmtEUR(monthlyPayment.toFixed(2));
