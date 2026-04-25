@@ -6,11 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const priceEl = $('numb1');           
   const savingsEl = $('numb2');         
   const yearsEl = $('numb3');           
-  const rateEl = $('interestRate');     
-  const taxesEl = $('taxes');           
-  const TipHipotecaHidden = $('TipHipoteca'); 
-  const regionEl = $('region');         
-  const calcBtn = $('calcBtn');         
+  const rateEl = $('interestRate');              
+  const TipInmuebleEl = $('TipInmueble'); 
+  const provinciaEl = $('region');
+  const solicitarBtn = $('solicitarBtn');         
   
   const resMonthly = $('resMonthly');
   const resFinanced = $('resFinanced');
@@ -31,6 +30,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const n = parseFloat(input.value);
     return isNaN(n) ? 0 : n;
   }
+
+   const provincias = {
+    "Albacete": "castilla-la-mancha",
+    "Alicante / Alacant": "comunidad-valenciana",
+    "Almería": "andalucia",
+    "Araba/Álava": "pais-vasco",
+    "Asturias": "asturias",
+    "Ávila": "castilla-y-leon",
+    "Badajoz": "extremadura",
+    "Balears, Illes": "baleares",
+    "Barcelona": "cataluna",
+    "Bizkaia / Vizcaya": "pais-vasco",
+    "Burgos": "castilla-y-leon",
+    "Cáceres": "extremadura",
+    "Cádiz": "andalucia",
+    "Cantabria": "cantabria",
+    "Castellón/Castelló": "comunidad-valenciana",
+    "Ceuta": "ceuta",
+    "Ciudad Real": "castilla-la-mancha",
+    "Córdoba": "andalucia",
+    "Coruña, A": "galicia",
+    "Cuenca": "castilla-la-mancha",
+    "Gipuzkoa / Guipúzcoa": "pais-vasco",
+     "Girona": "cataluna",
+    "Granada": "andalucia",
+    "Guadalajara": "castilla-la-mancha",
+    "Huelva": "andalucia",
+    "Huesca": "aragon",
+    "Jaén": "andalucia",
+    "León": "castilla-y-leon",
+    "Lleida / Lérida": "cataluna",
+    "Lugo": "galicia",
+    "Madrid": "madrid",
+    "Málaga": "andalucia",
+    "Melilla": "melilla",
+    "Murcia": "murcia",
+    "Navarra": "navarra",
+    "Ourense / orense": "galicia",
+    "Palencia": "castilla-y-leon",
+    "Las Palmas": "canarias",
+    "Pontevedra": "galicia",
+    "La Rioja": "la-rioja",
+    "Salamanca": "castilla-y-leon",
+     "Santa Cruz de Tenerife": "canarias",
+    "Segovia": "castilla-y-leon",
+    "Sevilla": "andalucia",
+    "Soria": "castilla-y-leon",
+    "Tarragona": "cataluna",
+    "Teruel": "aragon",
+    "Toledo": "castilla-la-mancha",
+    "Valencia/València": "comunidad-valenciana",
+    "Valladolid": "castilla-y-leon",
+    "Zamora": "castilla-y-leon",
+    "Zaragoza": "aragon"
+  };
 
   
 function getITP(region, price) {
@@ -131,8 +185,8 @@ function getITP(region, price) {
     const taxesInput = safeNumber(taxesEl);
 
   
-    const TipHipoteca = TipHipotecaHidden ? TipHipotecaHidden.value : 'fija';
-    const region = regionEl ? regionEl.value : 'general';
+    const TipInmueble = TipInmuebleEl ? TipInmuebleEl.value : 'fija';
+    const region = provinciaEl ? provinciaEl.value : 'general';
 
     const itpRate = getITP(region, price);
     const taxesAdjusted = taxesInput + (price * itpRate);
@@ -174,13 +228,13 @@ function getITP(region, price) {
       totalInterest,
       costProperty,
       costOperation,
-      TipHipoteca,
+      TipInmueble,
       region
     };
   }
 
   
-  [priceEl, savingsEl, yearsEl, rateEl, taxesEl].forEach(inp => {
+  [priceEl, savingsEl, yearsEl, rateEl].forEach(inp => {
     if (!inp) return;
     inp.addEventListener('keydown', (e) => {
       const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Delete','Home','End'];
@@ -196,16 +250,13 @@ function getITP(region, price) {
   });
 
   
-  [priceEl, savingsEl, yearsEl, rateEl, taxesEl, regionEl].forEach(i => {
+  [priceEl, savingsEl, yearsEl, rateEl, provinciaEl].forEach(i => {
     if (!i) return;
     i.addEventListener('input', calculateAll);
     i.addEventListener('change', calculateAll);
   });
 
-  if (calcBtn) calcBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    calculateAll();
-  });
+
 
 
   calculateAll();
