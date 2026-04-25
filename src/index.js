@@ -87,62 +87,49 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   
-function getITP(region, price) {
-  switch(region) {
-    case 'andalucia':
-      return 0.07; 
-    case 'aragon':
-      if (price <= 400000) return 0.08;
-      if (price <= 450000) return 0.085;
-      if (price <= 500000) return 0.09;
-      if (price <= 750000) return 0.095;
-      return 0.10;
-    case 'asturias':
-      if (price <= 300000) return 0.08;
-      if (price <= 500000) return 0.09;
-      return 0.10;
-    case 'baleares':
-      if (price <= 400000) return 0.08;
-      if (price <= 600000) return 0.09;
-      if (price <= 1000000) return 0.10;
-      if (price <= 2000000) return 0.12;
-      return 0.13;
-    case 'canarias':
-      return 0.065;
-    case 'cantabria':
-      return 0.09;
-    case 'castilla-la-mancha':
-      return 0.09;
-    case 'castilla-y-leon':
-      return price > 250000 ? 0.10 : 0.08;
-    case 'cataluna':
-      return price > 1000000 ? 0.11 : 0.10;
-    case 'ceuta':
-      return 0.06;
-    case 'madrid':
-      return 0.06;
-    case 'comunidad-valenciana':
-      return price > 1000000 ? 0.11 : 0.10;
-    case 'extremadura':
-      if (price <= 360000) return 0.08;
-      if (price <= 600000) return 0.10;
-      return 0.11;
-    case 'galicia':
-      return 0.08;
-    case 'la-rioja':
-      return 0.07;
-    case 'melilla':
-      return 0.06;
-    case 'murcia':
-      return 0.0775;
-    case 'navarra':
-      return 0.06;
-    case 'pais-vasco':
-      return 0.04;
-    default:
-      return 0.08; 
+ function getITP(region, price) {
+    switch(region) {
+      case 'andalucia': return 0.07;
+      case 'aragon': 
+            return price <= 400000 ? 0.08 : 0.10;
+      case 'asturias': 
+            return price <= 300000 ? 0.08 : 0.10;
+      case 'baleares': 
+            return price <= 400000 ? 0.08 : 0.13;
+      case 'canarias': 
+            return 0.065;
+      case 'cantabria': 
+           return 0.09;
+      case 'castilla-la-mancha': 
+           return 0.09;
+      case 'castilla-y-leon': 
+           return price > 250000 ? 0.10 : 0.08;
+      case 'cataluna': 
+           return price > 1000000 ? 0.11 : 0.10;
+      case 'ceuta': 
+           return 0.06;
+      case 'madrid': 
+           return 0.06;
+      case 'comunidad-valenciana': 
+           return price > 1000000 ? 0.11 : 0.10;
+      case 'extremadura': 
+           return price <= 360000 ? 0.08 : 0.11;
+      case 'galicia': 
+           return 0.08;
+      case 'la-rioja': 
+           return 0.07;
+      case 'melilla': 
+           return 0.06;
+      case 'murcia': 
+           return 0.0775;
+      case 'navarra': 
+           return 0.06;
+      case 'pais-vasco': 
+           return 0.04;
+       default: 
+           return 0.08;
+    }
   }
-}
 
 
   
