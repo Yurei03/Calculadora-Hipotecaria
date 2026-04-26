@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearsEl = $('numb3');           
   const rateEl = $('interestRate');              
   const TipInmuebleEl = $('TipInmueble'); 
-  const provinciaEl = $('region');
+  const provinceEl = $('region');
   const solicitarBtn = $('solicitarBtn');         
   
   const resMonthly = $('resMonthly');
@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const resPercent = $('resPercent');
   const resInterest = $('resInterest');
   const resPropertyCost = $('resPropertyCost');
-  const resTotalOperation = $('resTotalOperation');
   const canvas = $('miGrafico');
 
   
@@ -31,7 +30,34 @@ document.addEventListener('DOMContentLoaded', () => {
     return isNaN(n) ? 0 : n;
   }
 
-   const provincias = {
+  const expensByRange = [
+  { desde: 30000, hasta: 60000, notaria: 1200, registro: 523, gestoria: 500, otros: 120 },
+  { desde: 60001, hasta: 80000, notaria: 1280, registro: 550, gestoria: 500, otros: 120 },
+  { desde: 80001, hasta: 100000, notaria: 1350, registro: 610, gestoria: 500, otros: 120 },
+  { desde: 100001, hasta: 120000, notaria: 1410, registro: 635, gestoria: 500, otros: 120 },
+  { desde: 120001, hasta: 140000, notaria: 1445, registro: 660, gestoria: 500, otros: 120 },
+  { desde: 140001, hasta: 160000, notaria: 1520, registro: 660, gestoria: 500, otros: 120 },
+  { desde: 160001, hasta: 185000, notaria: 1520, registro: 715, gestoria: 500, otros: 120 },
+  { desde: 185001, hasta: 255000, notaria: 1575, registro: 715, gestoria: 500, otros: 120 },
+  { desde: 255001, hasta: 2000000, notaria: 1683, registro: 770, gestoria: 500, otros: 120 }
+];
+
+function calculateExpenses(price) {
+  for (let range of expensByRange) {
+    if (price >= range.desde && price <= range.hasta) {
+      return range.notaria + range.registro + range.gestoria + range.otros;
+    }
+  }
+  
+    if (price <  expensByRange[0].desde) {
+      const r =  expensByRange[0];
+      return r.notaria + r.registro + r.gestoria + r.otros;
+    }
+    const last =  expensByRange[ expensByRange.length - 1];
+    return last.notaria + last.registro + last.gestoria + last.otros;
+  }
+
+   const provinces = {
     "Albacete": "castilla-la-mancha",
     "Alicante / Alacant": "comunidad-valenciana",
     "Almería": "andalucia",
@@ -133,34 +159,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   
-  function drawChart(principal, interest, equity) {
+  function drawChart(equity, principal, interest) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const w = canvas.width = canvas.clientWidth || 300;
     const h = canvas.height = 120;
     ctx.clearRect(0, 0, w, h);
 
-    const total = principal + interest + equity || 1;
+    const total = equity + principal + interest || 1;
+    const eW = Math.round((equity / total) * w);
     const pW = Math.round((principal / total) * w);
-    const iW = Math.round((interest / total) * w);
-    const eW = Math.max(0, w - pW - iW);
+    const iW = Math.max(0, w - eW - pW);
 
-    
-    ctx.fillStyle = 'rgba(141, 37, 37, 1)';
-    ctx.fillRect(0, 30, pW, 40);
-    
-    ctx.fillStyle = 'rgba(229, 62, 62, 1)';
-    ctx.fillRect(pW, 30, iW, 40);
-    
     ctx.fillStyle = 'rgba(56, 161, 105, 0.89)';
-    ctx.fillRect(pW + iW, 30, eW, 40);
+    ctx.fillRect(0, 30, eW, 40);
 
-    
+    ctx.fillStyle = 'rgba(141, 37, 37, 1)';
+    ctx.fillRect(eW, 30, pW, 40);
+
+    ctx.fillStyle = 'rgba(229, 62, 62, 1)';
+    ctx.fillRect(eW + pW, 30, iW, 40);
+
     ctx.fillStyle = '#000';
-    ctx.font = '12px sans-serif';
-    ctx.fillText('Capital', 4, 22);
-    ctx.fillText('Intereses', Math.max(4, pW + 4), 22);
-    ctx.fillText('Entrada', Math.max(4, pW + iW + 4), 22);
+   ctx.font = '12px sans-serif';
+    ctx.fillText('Entrada', 4, 22);
+    ctx.fillText('Capital', eW + 4, 22);
+    ctx.fillText('Intereses', eW + pW + 4, 22);
   }
 
   
@@ -168,22 +192,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const price = safeNumber(priceEl);
     const savings = safeNumber(savingsEl);
     const years = Math.max(1, Math.round(safeNumber(yearsEl)));
-    const annualRate = safeNumber(rateEl);
-    const taxesInput = safeNumber(taxesEl);
+    const annualRate = safeNumber(rateEl);    
+    const otrosGastosManuales = safeNumber(otrosGastosEl);
 
-  
-    const TipInmueble = TipInmuebleEl ? TipInmuebleEl.value : 'fija';
-    const region = provinciaEl ? provinciaEl.value : 'general';
-
-    const itpRate = getITP(region, price);
-    const taxesAdjusted = taxesInput + (price * itpRate);
+    const province = provinceEl ? provinceEl.value : '';
+    const TipInmueble = TipInmuebleEl ? TipInmuebleEl.value : 'segunda-mano';
+    const region = provinces[province] || 'general';
 
     const costProperty = price + taxesAdjusted;
     const financed = Math.max(0, costProperty - savings);
-
     const financedPct = price > 0 ? (financed / price) * 100 : 0;
 
-  
+      let applImpuest = 0;
+    if (TipInmueble === 'nuevo') {
+      applImpuest = price * 0.10; 
+    } else {
+      applImpuest = price * getITP(region, price);
+    }
+
+    const gastosFijos = calcularGastosFijos(price);
+    const taxesAdjusted = applImpuest + gastosFijos + otrosGastosManuales;
+
     const monthlyRate = (annualRate / 100) / 12;
     const n = years * 12;
     let monthlyPayment = 0;
@@ -202,8 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (resFinanced) resFinanced.textContent = fmtEUR(financed.toFixed(2));
     if (resPercent) resPercent.textContent = financedPct.toFixed(2) + ' %';
     if (resInterest) resInterest.textContent = fmtEUR(totalInterest.toFixed(2));
-    if (resPropertyCost) resPropertyCost.textContent = fmtEUR(costProperty.toFixed(2));
-    if (resTotalOperation) resTotalOperation.textContent = fmtEUR(costOperation.toFixed(2));
+    if (resPropertyCost) resPropertyCost.textContent = fmtEUR(costProperty.toFixed(2));  
 
     drawChart(financed, totalInterest, savings);
 
@@ -237,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   
-  [priceEl, savingsEl, yearsEl, rateEl, provinciaEl].forEach(i => {
+  [priceEl, savingsEl, yearsEl, rateEl, provinceEl].forEach(i => {
     if (!i) return;
     i.addEventListener('input', calculateAll);
     i.addEventListener('change', calculateAll);
