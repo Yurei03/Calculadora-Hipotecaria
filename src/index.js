@@ -260,7 +260,55 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
+  window.addEventListener('resize', () => {
+    if (lastEquity !== undefined) drawChart(lastEquity, lastPrincipal, lastInterest);
+  });
 
+
+  if (solicitarBtn) {
+    solicitarBtn.addEventListener('click', async () => {
+      const nombre = window.prompt('Nombre completo:');
+      if (!nombre) { alert('Nombre requerido.'); return; }
+      const email = window.prompt('Correo electrónico:');
+      if (!email) { alert('Correo requerido.'); return; }
+      const telefono = window.prompt('Teléfono:');
+      if (!telefono) { alert('Teléfono requerido.'); return; }
+
+      const results = calculateAll();
+      const payload = {
+        nombre, email, telefono,
+        precio_propiedad: safeNumber(priceEl),
+        ahorros_aportados: safeNumber(savingsEl),
+        plazo_anos: Math.max(1, Math.round(safeNumber(yearsEl))),
+        tasa_interes: safeNumber(rateEl),
+        provincia: provinceEl ? provinceEl.value : '',
+        id_cliente: String(Date.now()),
+        resumen_calculo: {
+          coste_propiedad: results.costProperty,
+          financiado: results.financed,
+          cuota_mensual: results.monthlyPayment,
+          intereses_totales: results.totalInterest,
+          tipo_inmueble: results.tipoInmueble,
+          region: results.region,
+          impuestos_gastos_compra: results.totalPurchaseTaxes
+        }
+      };
+
+      try {
+        const resp = await fetch('src-api', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!resp.ok) throw new Error('Error en el servidor');
+        await resp.json();
+        alert('Solicitud enviada correctamente.');
+      } catch (err) {
+        console.error(err);
+        alert('No se pudo enviar la solicitud');
+      }
+    });
+  }
 
   calculateAll();
 });
