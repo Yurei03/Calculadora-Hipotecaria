@@ -23,7 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastEquity = 0, lastPrincipal = 0, lastInterest = 0;
 
   function fmtEUR(v) {
-    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(Number(v));
+    let num = Number(v);
+
+    if(isNaN(num)) num = 0;
+
+    let [entero, decimal] = num.toFixed(2).split('.');
+    entero = entero.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    decimal = decimal || '00';
+
+    return `${entero}, ${decimal} €`;
   }
 
   function safeNumber(input) {
@@ -158,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const iW = Math.max(0, w - eW - pW);
     const barHeight = Math.min(50, h * 0.6);
     const barY = (h - barHeight) / 2;
-    const radius = 12; // radio de las esquinas redondeadas
+    const radius = 12;
 
 
     ctx.save();
@@ -221,10 +229,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalInterest = Math.max(0, totalPayment - financed);
     const costOperation = costProperty + totalInterest;
 
-    // Actualizar textos
+    
     if (resMonthly) resMonthly.textContent = fmtEUR(monthlyPayment.toFixed(2));
     if (resFinanced) resFinanced.textContent = fmtEUR(financed.toFixed(2));
-    if (resPercent) resPercent.textContent = financedPct.toFixed(2) + ' %';
+    if (resPercent) resPercent.textContent = financedPct.toFixed(2).replace('.', ',') + ' %';
     if (resInterest) resInterest.textContent = fmtEUR(totalInterest.toFixed(2));
     if (resPropertyCost) resPropertyCost.textContent = fmtEUR(costProperty.toFixed(2));
     if (resTotalOperation) resTotalOperation.textContent = fmtEUR(costOperation.toFixed(2));
