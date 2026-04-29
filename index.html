@@ -25,25 +25,25 @@
 
       <label class="ColorLabel" for="numb1">Precio de la propiedad</label>
       <div class="input">
-        <input class="numb" id="numb1" type="number" value="200000" step="1000">
+        <input class="numb" id="numb1" type="number" value="200000" step="1000" min="0" required>
         <span class="valor">€</span>
       </div>
 
       <label class="ColorLabel" for="numb2">Ahorros aportados (entrada)</label>
       <div class="input">
-        <input class="numb" id="numb2" type="number" value="70000" step="1000">
+        <input class="numb" id="numb2" type="number" value="70000" step="1000" min="0" required>
         <span class="valor">€</span>
       </div>
 
       <label class="ColorLabel" for="numb3">Plazo en años</label>
       <div class="input">
-        <input class="numb" id="numb3" type="number" value="30" step="1">
+        <input class="numb" id="numb3" type="number" value="30" step="1" min="0" required>
         <span class="valor">años</span>
       </div>
 
       <label class="ColorLabel" for="interestRate">Tasa de interés anual</label>
       <div class="input">
-        <input class="numb" id="interestRate" type="number" value="2.15" step="0.05">
+        <input class="numb" id="interestRate" type="number" value="2.15" step="0.05" min="0" required>
         <span class="valor">%</span>
       </div>
 
@@ -55,11 +55,6 @@
         </select>
       </div>
 
-      <label class="ColorLabel" for="taxes">Impuestos y gastos adicionales</label>
-      <div class="input">
-        <input class="numb" id="taxes" type="number" value="2000" step="100">
-        <span class="valor">€</span>
-      </div>
 
       <label class="ColorLabel" for="region">Provincia</label>
       <div class="input">
