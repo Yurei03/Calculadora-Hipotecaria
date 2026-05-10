@@ -1,16 +1,183 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+  
+  const fieldDefinitions = [
+    {
+      id: 'numb1',
+      label: 'Precio de la propiedad',
+      type: 'number',
+      value: 200000,
+      step: 1000,
+      min: 0,
+      unit: '€',
+      inputClass: 'numb'
+    },
+    {
+      id: 'numb2',
+      label: 'Ahorros aportados (entrada)',
+      type: 'number',
+      value: 70000,
+      step: 1000,
+      min: 0,
+      unit: '€',
+      inputClass: 'numb'
+    },
+    {
+      id: 'numb3',
+      label: 'Plazo en años',
+      type: 'number',
+      value: 30,
+      step: 1,
+      min: 0,
+      unit: 'años',
+      inputClass: 'numb'
+    },
+    {
+      id: 'interestRate',
+      label: 'Tipo de interés',
+      type: 'number',
+      value: 2.15,
+      step: 0.05,
+      min: 0,
+      unit: '%',
+      inputClass: 'numb'
+    }
+  ];
+
+  
+  const inmuebleOptions = [
+    { value: 'segunda-mano', text: 'Segunda mano' },
+    { value: 'nuevo', text: 'Nuevo (obra nueva)' }
+  ];
+
+  
+  const provinceList = [
+    "Albacete", "Alicante / Alacant", "Almería", "Araba/Álava", "Asturias",
+    "Ávila", "Badajoz", "Balears, Illes", "Barcelona", "Bizkaia / Vizcaya",
+    "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castellón/Castelló",
+    "Ceuta", "Ciudad Real", "Córdoba", "Coruña, A", "Cuenca",
+    "Gipuzkoa / Guipúzcoa", "Girona", "Granada", "Guadalajara", "Huelva",
+    "Huesca", "Jaén", "León", "Lleida / Lérida", "Lugo", "Madrid",
+    "Málaga", "Melilla", "Murcia", "Navarra", "Ourense / orense",
+    "Palencia", "Las Palmas", "Pontevedra", "La Rioja", "Salamanca",
+    "Santa Cruz de Tenerife", "Segovia", "Sevilla", "Soria", "Tarragona",
+    "Teruel", "Toledo", "Valencia/València", "Valladolid", "Zamora", "Zaragoza"
+  ];
+
+  
+  const resultDefinitions = [
+    { id: 'resMonthly', label: 'CUOTA MENSUAL ESTIMADA', fullWidth: true, highlighted: true, labelId: 'result-label-1' },
+    { id: 'resFinanced', label: 'CAPITAL FINANCIADO' },
+    { id: 'resPercent', label: 'PORCENTAJE FINANCIADO' },
+    { id: 'resInterest', label: 'INTERESES TOTALES' },
+    { id: 'resPropertyCost', label: 'COSTE TOTAL PROPIEDAD' },
+    { id: 'resTotalOperation', label: 'COSTE TOTAL OPERACIÓN' },
+    { id: 'resPurchaseTaxes', label: 'IMPUESTOS Y GASTOS DE COMPRA' }
+  ];
+
+  
+  const formContainer = document.getElementById('formContainer');
+  if (formContainer) {
+    
+    fieldDefinitions.forEach(field => {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = `
+        <label class="ColorLabel" for="${field.id}">${field.label}</label>
+        <div class="input">
+          <input class="${field.inputClass}" id="${field.id}" type="${field.type}" value="${field.value}" step="${field.step}" min="${field.min}" required>
+          <span class="valor">${field.unit}</span>
+        </div>
+      `;
+      formContainer.appendChild(wrapper);
+    });
+
+  
+    const inmuebleLabel = document.createElement('label');
+    inmuebleLabel.className = 'ColorLabel';
+    inmuebleLabel.setAttribute('for', 'tipoInmueble');
+    inmuebleLabel.textContent = 'Tipo de inmueble';
+    formContainer.appendChild(inmuebleLabel);
+
+    const inmuebleWrapper = document.createElement('div');
+    inmuebleWrapper.className = 'input';
+    const inmuebleSelect = document.createElement('select');
+    inmuebleSelect.id = 'tipoInmueble';
+    inmuebleOptions.forEach(opt => {
+      const option = document.createElement('option');
+      option.value = opt.value;
+      option.textContent = opt.text;
+      if (opt.value === 'segunda-mano') option.selected = true;
+      inmuebleSelect.appendChild(option);
+    });
+    inmuebleWrapper.appendChild(inmuebleSelect);
+    formContainer.appendChild(inmuebleWrapper);
+
+  
+    const provinceLabel = document.createElement('label');
+    provinceLabel.className = 'ColorLabel';
+    provinceLabel.setAttribute('for', 'region');
+    provinceLabel.textContent = 'Localización del inmueble';
+    formContainer.appendChild(provinceLabel);
+
+    const provinceWrapper = document.createElement('div');
+    provinceWrapper.className = 'input';
+    const provinceSelect = document.createElement('select');
+    provinceSelect.id = 'region';
+    provinceList.forEach(province => {
+      const option = document.createElement('option');
+      option.value = province;
+      option.textContent = province;
+      if (province === 'Valencia/València') option.selected = true;
+      provinceSelect.appendChild(option);
+    });
+    provinceWrapper.appendChild(provinceSelect);
+    formContainer.appendChild(provinceWrapper);
+  }
+
+  
+  const resultsContainer = document.getElementById('resultsContainer');
+  if (resultsContainer) {
+  
+    const grid = document.createElement('div');
+    grid.className = 'results-grid';
+
+    resultDefinitions.forEach(def => {
+      const block = document.createElement('div');
+      block.className = 'result-block';
+      if (def.fullWidth) block.classList.add('full-width');
+      if (def.highlighted) block.classList.add('highlighted');
+
+      const labelSpan = document.createElement('span');
+      labelSpan.className = 'result-label';
+      if (def.labelId) labelSpan.id = def.labelId;
+      labelSpan.textContent = def.label;
+
+      const valueSpan = document.createElement('span');
+      valueSpan.className = 'result-value';
+      valueSpan.id = def.id;
+      valueSpan.textContent = '-';
+
+      block.appendChild(labelSpan);
+      block.appendChild(valueSpan);
+      grid.appendChild(block);
+    });
+
+    resultsContainer.appendChild(grid);
+  }
+
+  
   const $ = id => document.getElementById(id);
 
-
+  
   const priceEl = $('numb1');
   const savingsEl = $('numb2');
   const yearsEl = $('numb3');
   const rateEl = $('interestRate');
-  const taxesEl = $('taxes');
   const tipoInmuebleEl = $('tipoInmueble');
   const provinceEl = $('region');
   const solicitarBtn = $('solicitarBtn');
 
+  
   const resMonthly = $('resMonthly');
   const resFinanced = $('resFinanced');
   const resPercent = $('resPercent');
@@ -24,13 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function fmtEUR(v) {
     let num = Number(v);
-
-    if(isNaN(num)) num = 0;
-
+    if (isNaN(num)) num = 0;
     let [entero, decimal] = num.toFixed(2).split('.');
     entero = entero.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     decimal = decimal || '00';
-
     return `${entero}, ${decimal} €`;
   }
 
@@ -40,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return isNaN(n) ? 0 : n;
   }
 
-
+  
   const expensByRange = [
     { desde: 30000, hasta: 60000, notaria: 1200, registro: 523, gestoria: 500, otros: 120 },
     { desde: 60001, hasta: 80000, notaria: 1280, registro: 550, gestoria: 500, otros: 120 },
@@ -67,6 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return last.notaria + last.registro + last.gestoria + last.otros;
   }
 
+  
   const provinces = {
     "Albacete": "castilla-la-mancha",
     "Alicante / Alacant": "comunidad-valenciana",
@@ -168,20 +333,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const barY = (h - barHeight) / 2;
     const radius = 12;
 
-
     ctx.save();
     ctx.beginPath();
-    ctx.roundRect(0, barY, w, barHeight, radius);
+    
+    if (ctx.roundRect) {
+      ctx.roundRect(0, barY, w, barHeight, radius);
+    } else {
+    
+      ctx.rect(0, barY, w, barHeight);
+    }
     ctx.clip();
-
 
     ctx.fillStyle = 'rgba(56, 161, 105, 0.89)';
     ctx.fillRect(0, barY, eW, barHeight);
 
-
     ctx.fillStyle = 'rgba(141, 37, 37, 1)';
     ctx.fillRect(eW, barY, pW, barHeight);
-
 
     ctx.fillStyle = 'rgba(229, 62, 62, 1)';
     ctx.fillRect(eW + pW, barY, iW, barHeight);
@@ -189,14 +356,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.restore();
   }
 
-
   function calculateAll() {
     const price = safeNumber(priceEl);
     const savings = safeNumber(savingsEl);
     const years = Math.max(1, Math.round(safeNumber(yearsEl)));
     const annualRate = safeNumber(rateEl);
-    const extraUserTaxes = safeNumber(taxesEl);
-    
     const province = provinceEl ? provinceEl.value : '';
     const tipoInmueble = tipoInmuebleEl ? tipoInmuebleEl.value : 'segunda-mano';
     const region = provinces[province] || 'general';
@@ -209,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const gastosFijos = calcularGastosFijos(price);
-    const taxesAdjusted = impuestoAplicado + gastosFijos + extraUserTaxes;
+    const taxesAdjusted = impuestoAplicado + gastosFijos; 
     const totalPurchaseTaxes = taxesAdjusted;
 
     const costProperty = price + taxesAdjusted;
@@ -229,7 +393,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalInterest = Math.max(0, totalPayment - financed);
     const costOperation = costProperty + totalInterest;
 
-    
     if (resMonthly) resMonthly.textContent = fmtEUR(monthlyPayment.toFixed(2));
     if (resFinanced) resFinanced.textContent = fmtEUR(financed.toFixed(2));
     if (resPercent) resPercent.textContent = financedPct.toFixed(2).replace('.', ',') + ' %';
@@ -246,33 +409,18 @@ document.addEventListener('DOMContentLoaded', () => {
     return { monthlyPayment, financed, financedPct, totalInterest, costProperty, costOperation, tipoInmueble, region, totalPurchaseTaxes };
   }
 
-
-  [priceEl, savingsEl, yearsEl, rateEl, taxesEl].forEach(inp => {
-    if (!inp) return;
-    inp.addEventListener('keydown', (e) => {
-      const allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Delete','Home','End'];
-      if (allowed.includes(e.key)) return;
-      if (e.key === '.' || e.key === ',') {
-        if (inp.value.includes('.') || inp.value.includes(',')) e.preventDefault();
-        return;
-      }
-      if (!/[\d]/.test(e.key)) e.preventDefault();
-    });
+  
+  const inputsToWatch = [priceEl, savingsEl, yearsEl, rateEl, provinceEl, tipoInmuebleEl].filter(el => el);
+  inputsToWatch.forEach(el => {
+    el.addEventListener('input', calculateAll);
+    el.addEventListener('change', calculateAll);
   });
-
-
-  [priceEl, savingsEl, yearsEl, rateEl, provinceEl, tipoInmuebleEl, taxesEl].forEach(i => {
-    if (!i) return;
-    i.addEventListener('input', calculateAll);
-    i.addEventListener('change', calculateAll);
-  });
-
 
   window.addEventListener('resize', () => {
     if (lastEquity !== undefined) drawChart(lastEquity, lastPrincipal, lastInterest);
   });
 
-
+  
   if (solicitarBtn) {
     solicitarBtn.addEventListener('click', async () => {
       const nombre = window.prompt('Nombre completo:');
@@ -303,6 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       try {
+   
         const resp = await fetch('src-api', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -318,5 +467,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  
   calculateAll();
 });

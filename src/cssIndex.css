@@ -212,7 +212,7 @@ canvas#miGrafico
 }
 .chart-legend 
 {
-  display: absolute;
+  display: flex;
   left: 0px;
   gap: 1.5rem;
   margin-top: 0.75rem;
